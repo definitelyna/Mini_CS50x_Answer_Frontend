@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { Box, TextField } from "@mui/material";
 import "./QuestionCheck.css";
 
 const QuestionCheck = () => {
-  const [questions, setQuestions] = useState([
+  const questions = [
     {
       id: 1,
       question: "Nonthreathening",
@@ -34,7 +34,7 @@ const QuestionCheck = () => {
       star_rating: 5,
       answered: false,
     },
-  ]);
+  ];
 
   // useEffect(() => {
   //     fetch("https://isph-mini-cs50x-api.vercel.app/questions")
