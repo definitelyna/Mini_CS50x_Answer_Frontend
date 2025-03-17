@@ -120,7 +120,7 @@ const QuestionCheck = () => {
                     <div key={i}>
                       <Box
                         component="img"
-                        src="/public/rubber-duck.png"
+                        src="/rubber-duck.png"
                         sx={{ height: "4vh", ml: 0.5 }}
                       ></Box>
                     </div>
