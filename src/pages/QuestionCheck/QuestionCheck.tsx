@@ -58,7 +58,7 @@ const QuestionCheck = () => {
         sx={{
           height: "auto",
           width: "67vw",
-          color: "#a40f33",
+          color: "#A51C30",
           bgcolor: "#fcf8ed",
           display: "flex",
           flexDirection: "column",
@@ -150,7 +150,7 @@ const QuestionCheck = () => {
 
                 <Button
                   sx={{
-                    bgcolor: "#a40f33",
+                    bgcolor: "#A51C30",
                     color: "#fcf8ed",
                     mt: 2,
                     width: "20%",
