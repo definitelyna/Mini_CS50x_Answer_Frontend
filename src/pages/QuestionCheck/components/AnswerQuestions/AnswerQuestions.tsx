@@ -10,6 +10,7 @@ interface Props {
 }
 
 const AnswerQuestions : React.FC<Props> = ({teamNameId, questions}) => {
+
   return (
     <Box
       sx={{
@@ -21,9 +22,10 @@ const AnswerQuestions : React.FC<Props> = ({teamNameId, questions}) => {
       }}
     >
       <TeamInfo teamNameId={teamNameId} guessAttemps={23}/>
-      {questions.map((question) => (
-        <AnswerInputCard teamNameId={teamNameId} key={question.id} question={question} questionsAnswered={[]} />
-      ))}
+      {questions.map((question) => {
+        const questionWithAnswered = { ...question, answered: question.answered ?? false };
+        return <AnswerInputCard teamNameId={teamNameId} key={question.id} question={questionWithAnswered} />
+      })}
     </Box>
   )
 }

@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import {Box, Card, Divider} from "@mui/material";
 import React from "react";
 
-const Header = () => {
+const Header:React.FC = () => {
   return (
     <Card
       sx={{

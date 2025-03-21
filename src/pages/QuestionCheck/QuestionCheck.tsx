@@ -42,8 +42,6 @@ const QuestionCheck: React.FC<Props> = ({ teamNameId }) => {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
 
-  console.log(teamSolves)
-
   if (isQuestionLoading || isTeamSolvesLoading || !questionList) {
     return <div>Loading...</div>;
   }
@@ -97,7 +95,7 @@ const QuestionCheck: React.FC<Props> = ({ teamNameId }) => {
               width: isLargeScreen ? "50%" : "100%",
             }}
           >
-            <Leaderboard isLargeScreen={isLargeScreen}/>
+            <Leaderboard />
           </Box>
         </Box>
       </Box>

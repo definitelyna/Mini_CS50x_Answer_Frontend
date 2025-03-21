@@ -1,4 +1,5 @@
 interface Question {
+  answered: boolean;
   id: number;
   question: string;
   star_rating: number;
@@ -12,4 +13,4 @@ interface CleanedQuestions {
 }
 
 
-export { Question, CleanedQuestions };
+export type { Question, CleanedQuestions };
