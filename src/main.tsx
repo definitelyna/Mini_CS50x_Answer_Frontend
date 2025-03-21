@@ -14,7 +14,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/QuestionCheck",
-    element: <QuestionCheck />,
+    element: <QuestionCheck teamNameId={""} />,
   },
 ]);
 

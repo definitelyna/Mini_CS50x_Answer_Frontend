@@ -1,14 +1,24 @@
 import React from "react";
-import { Card, Typography, Box, Divider } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import {Card, Typography, Box, Divider} from "@mui/material";
 
-const TeamCard = ({ teamData }) => {
-  const { team_name, solves, score, hints_given, wrong_answers } = teamData;
-  const [statuses, _] = solves;
+// @ts-ignore
+interface TeamCardProps {
+  teamData?: any
+}
+
+const TeamCard: React.FC<TeamCardProps> = ({teamData}) => {
+  const {team_name, score} = teamData;
 
   return (
-    <Card sx={{ display: "flex", alignItems: "center", justifyContent: 'space-evenly', gap: 2, minHeight: 40, boxShadow: 2, borderRadius: 1,}}>
+    <Card sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: 'space-evenly',
+      gap: 2,
+      minHeight: 40,
+      boxShadow: 2,
+      borderRadius: 1,
+    }}>
       {/* Team Name */}
       <Typography
         variant="h6"
@@ -23,11 +33,11 @@ const TeamCard = ({ teamData }) => {
         {team_name}
       </Typography>
 
-      <Divider orientation="vertical" flexItem />
+      <Divider orientation="vertical" flexItem/>
 
       {/* Score */}
-      <Box sx={{ display: "flex", width: 100, gap: 1, justifyContent: "center", minWidth: 120,}}>
-        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "1rem", whiteSpace: "nowrap", textAlign: "center"}}>
+      <Box sx={{display: "flex", width: 100, gap: 1, justifyContent: "center", minWidth: 120,}}>
+        <Typography variant="h6" fontWeight="bold" sx={{fontSize: "1rem", whiteSpace: "nowrap", textAlign: "center"}}>
           {score} ⭐
         </Typography>
       </Box>

@@ -1,10 +1,10 @@
-import React, { use, useEffect, useState } from "react";
+import React from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import useTeamRankings from "../../hooks/useTeamRankings";
 import LeaderboardTable from "./LeaderboardTable";
 
 
-const Leaderboard : React.FC = ({}) => {
+const Leaderboard : React.FC = () => {
   const { data: rankings, isLoading, isError } = useTeamRankings();
 
   if (isLoading)

@@ -74,6 +74,7 @@ const AnswerInputCard: React.FC<Props> = ({ teamNameId, question }) => {
     submitAnswer(teamNameId, question.id, response).then((response) => {
       if(response.correct){
         setCongrats(true);
+        // @ts-ignore
         queryClient.invalidateQueries(["questions"]);
         setResponse("Answered");
       } else {

@@ -1,21 +1,22 @@
-import { Box, TextField, Button } from "@mui/material";
+import {Box, TextField, Button} from "@mui/material";
 import "./InputTeam.css";
-import { ChangeEvent, useState, useEffect } from "react";
+import {ChangeEvent, useState, useEffect} from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useNavigate } from "react-router-dom";
-import { createClient } from "@supabase/supabase-js";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import {createClient, User} from "@supabase/supabase-js";
+import {Auth} from "@supabase/auth-ui-react";
+import {ThemeSupa} from "@supabase/auth-ui-shared";
 import QuestionCheck from "../QuestionCheck/QuestionCheck";
 import updateTeamName from "./utils/updateTeamName";
 
 interface Session {
-  access_token: string;
   expires_at: number;
+  provider_token?: string | null;
+  provider_refresh_token?: string | null;
+  access_token: string;
+  refresh_token: string;
   expires_in: number;
-  user: {
-    email: string;
-  };
+  token_type: string;
+  user: User;
 }
 
 const supabase = createClient(
@@ -32,7 +33,7 @@ const fetchTeamName = async (session: Session) => {
         "Content-Type": "application/json",
         Authorization: session.access_token,
       },
-      body: JSON.stringify({ email: session.user.email }),
+      body: JSON.stringify({email: session.user.email}),
       redirect: "follow",
     }
   );
@@ -46,19 +47,23 @@ const fetchTeamName = async (session: Session) => {
 
 const InputTeam = () => {
   const [session, setSession] = useState(null);
-  const [email, setEmail] = useState<string>("");
+  const [, setEmail] = useState<string>("");
   const [teamNameId, setTeamNameId] = useState<string>("");
   const [teamName, setTeamName] = useState<string>("");
   const [inputTeamName, setInputTeamName] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({data: {session}}) => {
+      // @ts-ignore
       setSession(session);
+      // @ts-ignore
       setEmail(session?.user.email);
 
+
       if (session !== null) {
-        fetchTeamName(session).then((data) => {
+        const safeSession = {...session, expires_at: session.expires_at ?? 0};
+        fetchTeamName(safeSession).then((data) => {
           console.log(data);
           setTeamNameId(data.team_name_id);
           setTeamName(data.team_name);
@@ -67,9 +72,11 @@ const InputTeam = () => {
     });
 
     const {
-      data: { subscription },
+      data: {subscription},
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      // @ts-ignore
       setSession(session);
+      // @ts-ignore
       setEmail(session?.user.email);
     });
 
@@ -95,7 +102,7 @@ const InputTeam = () => {
     return (
       <Auth
         supabaseClient={supabase}
-        appearance={{ theme: ThemeSupa }}
+        appearance={{theme: ThemeSupa}}
         providers={[]}
         showLinks={false}
       />
@@ -114,14 +121,14 @@ const InputTeam = () => {
       >
         <h1>
           Welcome to
-          <br />
+          <br/>
           Mini CS50x Puzzle Day!
-          <br />
-          <br />
+          <br/>
+          <br/>
           What's your team name?
         </h1>
 
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{mt: 4}}>
           <TextField
             id="teamName"
             variant="standard"
@@ -133,16 +140,16 @@ const InputTeam = () => {
 
           <Button
             variant="contained"
-            sx={{ marginLeft: 3 }}
+            sx={{marginLeft: 3}}
             onClick={handleSubmit}
           >
-            <ArrowForwardIosIcon />
+            <ArrowForwardIosIcon/>
           </Button>
         </Box>
       </Box>
     );
   } else {
-    return <QuestionCheck teamNameId={teamNameId} />;
+    return <QuestionCheck teamNameId={teamNameId}/>;
   }
 };
 
