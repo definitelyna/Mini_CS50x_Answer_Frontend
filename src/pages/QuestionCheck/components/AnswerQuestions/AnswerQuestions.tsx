@@ -22,7 +22,7 @@ const AnswerQuestions : React.FC<Props> = ({teamNameId, questions}) => {
     >
       <TeamInfo teamNameId={teamNameId} guessAttemps={23}/>
       {questions.map((question) => (
-        <AnswerInputCard key={question.id} question={question} questionsAnswered={[]} />
+        <AnswerInputCard teamNameId={teamNameId} key={question.id} question={question} questionsAnswered={[]} />
       ))}
     </Box>
   )

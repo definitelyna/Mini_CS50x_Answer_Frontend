@@ -1,7 +1,11 @@
 import { Box, TextField, Button } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useState } from "react";
+import {useQueryClient} from "@tanstack/react-query";
+import WellDoneModal from "../CongratulationsModal.tsx";
+import WrongModal from "../WrongModal.tsx";
 
 interface Question {
   id: number;
@@ -12,11 +16,51 @@ interface Question {
 
 interface Props {
   question: Question;
-  key: number;
+  teamNameId: string;
 }
 
-const AnswerInputCard: React.FC<Props> = ({ question, key }) => {
+const submitAnswer = async (team_name_id: string, question_id: number, answer: string) => {
+  try {
+    const response = await fetch("https://isph-mini-cs50x-api.vercel.app/answer", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        team_name_id: team_name_id,
+        question_id: question_id,
+        answer: answer,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(response);
+      return { correct: false, error: response.status };
+    }
+
+    const result = await response.json();
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error("Error sending data:", error);
+    return { correct: false };
+  }
+};
+
+
+const AnswerInputCard: React.FC<Props> = ({ teamNameId, question }) => {
   const [response, setResponse] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const [congrats, setCongrats] = useState<boolean>(false);
+  const [wrong, setWrong] = useState<boolean>(false);
+
+  const handleClose = () => {
+    setCongrats(false);
+    setWrong(false);
+  };
+
+  const queryClient = useQueryClient();
 
   const handleSubmit = () => {
     console.log(
@@ -24,6 +68,20 @@ const AnswerInputCard: React.FC<Props> = ({ question, key }) => {
       response || "No response"
     );
     // Send response to backend
+
+    setSubmitting(true);
+
+    submitAnswer(teamNameId, question.id, response).then((response) => {
+      if(response.correct){
+        setCongrats(true);
+        queryClient.invalidateQueries(["questions"]);
+        setResponse("Answered");
+      } else {
+        setWrong(true);
+      }
+    }).finally(() => {
+      setSubmitting(false);
+    });
   };
 
   return (
@@ -37,6 +95,9 @@ const AnswerInputCard: React.FC<Props> = ({ question, key }) => {
         paddingLeft: "40px",
       }}
     >
+      <WellDoneModal open={congrats} onClose={handleClose} questionId={question.question} />
+      <WrongModal open={wrong} onClose={handleClose} questionId={question.question} />
+
       <Box sx={{ display: "flex", flexDirection: "row" }}>
         <h2 style={{ fontWeight: "normal" }}>{question.question}</h2>
         {Array.from({ length: question.star_rating }, (_, i) => (
@@ -66,10 +127,16 @@ const AnswerInputCard: React.FC<Props> = ({ question, key }) => {
             },
             width: "70%",
           }}
-          placeholder="Answer"
+          placeholder={question.answered ? "Answered" : "Your answer"}
           disabled={question.answered}
           value={response}
           onChange={(e) => setResponse(e.target.value)}
+          autoComplete="off"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !question.answered) {
+              handleSubmit();
+            }
+          }}
         />
 
         {question.answered ? <LockOpenOutlinedIcon /> : <LockOutlinedIcon />}
@@ -87,7 +154,7 @@ const AnswerInputCard: React.FC<Props> = ({ question, key }) => {
           }}
           onClick={handleSubmit}
         >
-          Submit
+          {submitting ? <CircularProgress size={20} thickness={10} color='inherit' /> : "Submit"}
         </Button>
       )}
     </Box>
