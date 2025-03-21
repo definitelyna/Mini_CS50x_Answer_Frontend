@@ -8,6 +8,7 @@ const Header = () => {
       sx={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-evenly",
         minHeight: 40,
         gap: 2,
         backgroundColor: "#f6f6f6",
@@ -32,78 +33,6 @@ const Header = () => {
 
       <Divider orientation="vertical" flexItem/>
 
-      {/* Status Icons */}
-      {/* <Box
-        sx={{
-          display: "flex",
-          gap: 1,
-          flexGrow: 1,
-          justifyContent: "center",
-          minWidth: 200,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontSize: "1.25rem",
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          Status
-        </Typography>
-      </Box>
-
-      <Divider orientation="vertical" flexItem/> */}
-
-      {/* Wrong Answers Given */}
-      {/* <Box
-        sx={{
-          display: "flex",
-          flexShrink: 0,
-          minWidth: 50,
-          justifyContent: "center",
-          gap: 1,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontSize: "1rem",
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          ❌
-        </Typography>
-      </Box>
-
-      <Divider orientation="vertical" flexItem/> */}
-
-      {/* Hints Given */}
-      {/* <Box
-        sx={{
-          display: "flex",
-          flexShrink: 0,
-          minWidth: 50,
-          justifyContent: "center",
-          gap: 1,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontSize: "1rem",
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          Hints
-        </Typography>
-      </Box>
-
-      <Divider orientation="vertical" flexItem/> */}
-
       {/* Score */}
       <Box
         sx={{
@@ -117,7 +46,7 @@ const Header = () => {
         <Typography
           variant="h6"
           sx={{
-            fontSize: "1.25rem",
+            fontSize: "1rem",
             fontWeight: "bold",
             textAlign: "center",
           }}

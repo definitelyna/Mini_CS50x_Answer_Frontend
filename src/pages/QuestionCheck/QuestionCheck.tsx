@@ -1,24 +1,13 @@
 // import { useEffect, useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import "./QuestionCheck.css";
 import Title from "./components/Title";
 import Leaderboard from "./components/Leaderboard/Leaderboard";
-import AnswerInputCard from "./components/AnswerInput/AnswerInputCard";
 import useFetchQuestions from "./hooks/useFetchQuestions";
 import useFetchTeamSolves from "./hooks/useFetchTeamSolves";
-
-interface Question {
-  id: number;
-  question: string;
-  star_rating: number;
-}
-
-interface CleanedQuestions {
-  id: number;
-  question: string;
-  star_rating: number;
-  answered: boolean;
-}
+import React from "react";
+import {Question, CleanedQuestions} from "../../type/QuestionCheckTypes.ts";
+import AnswerQuestions from "./components/AnswerQuestions/AnswerQuestions.tsx";
 
 interface Props {
   teamNameId: string;
@@ -50,6 +39,11 @@ const QuestionCheck: React.FC<Props> = ({ teamNameId }) => {
   const { data: teamSolves, isLoading: isTeamSolvesLoading } =
     useFetchTeamSolves(teamNameId);
 
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
+
+  console.log(teamSolves)
+
   if (isQuestionLoading || isTeamSolvesLoading || !questionList) {
     return <div>Loading...</div>;
   }
@@ -73,6 +67,7 @@ const QuestionCheck: React.FC<Props> = ({ teamNameId }) => {
         sx={{
           height: "auto",
           width: "67vw",
+          minWidth: "800px",
           color: "#A51C30",
           bgcolor: "#fcf8ed",
           display: "flex",
@@ -83,55 +78,26 @@ const QuestionCheck: React.FC<Props> = ({ teamNameId }) => {
         }}
       >
         <Title />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "100%",
-            mt: 7,
-          }}
-        >
+
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              width: "60%",
-              px: 5,
+              flexDirection: isLargeScreen ? "row" : "column",
+              alignItems: "center",
+              width: "100%",
+              gap: 2,
             }}
           >
-            <Box display="flex" justifyContent="space-between">
-              <Box>
-                <h2>Team name</h2>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignSelf: "flex-end",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <h2>Guess attempts</h2>
-                <h3 style={{ fontWeight: "normal" }}>23</h3>
-              </Box>
-            </Box>
-
-            {questions.map((question) => (
-              <AnswerInputCard key={question.id} question={question} />
-            ))}
-          </Box>
-
+          <AnswerQuestions questions={questions} teamNameId={teamNameId} />
           <Box
             sx={{
-              width: "30%",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              width: isLargeScreen ? "50%" : "100%",
             }}
           >
-            <Leaderboard />
+            <Leaderboard isLargeScreen={isLargeScreen}/>
           </Box>
         </Box>
       </Box>
