@@ -12,10 +12,10 @@ interface Question {
 
 interface Props {
   question: Question;
-  questionsAnswered: Array<boolean>;
+  key: number;
 }
 
-const AnswerInputCard: React.FC<Props> = ({ question }) => {
+const AnswerInputCard: React.FC<Props> = ({ question, key }) => {
   const [response, setResponse] = useState("");
 
   const handleSubmit = () => {
@@ -34,6 +34,7 @@ const AnswerInputCard: React.FC<Props> = ({ question }) => {
         flexDirection: "column",
         justifyContent: "left",
         mb: 7,
+        paddingLeft: "40px",
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "row" }}>

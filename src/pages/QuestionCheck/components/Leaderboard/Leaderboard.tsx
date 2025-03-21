@@ -1,9 +1,10 @@
-import { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
 import useTeamRankings from "../../hooks/useTeamRankings";
 import LeaderboardTable from "./LeaderboardTable";
 
-const Leaderboard = () => {
+
+const Leaderboard : React.FC = ({}) => {
   const { data: rankings, isLoading, isError } = useTeamRankings();
 
   if (isLoading)
@@ -44,7 +45,7 @@ const Leaderboard = () => {
       display="flex"
       alignItems="center"
       flexDirection="column"
-      sx={{ backgroundColor: "#fcf8ed" }}
+      sx={{ backgroundColor: "#fcf8ed", width: "100%", maxWidth: "400px" }}
     >
       <h2>Leaderboard</h2>
       <LeaderboardTable rankings={rankings} />

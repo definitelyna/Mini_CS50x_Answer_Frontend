@@ -8,7 +8,7 @@ const TeamCard = ({ teamData }) => {
   const [statuses, _] = solves;
 
   return (
-    <Card sx={{ display: "flex", alignItems: "center", gap: 2, minHeight: 40, boxShadow: 2, borderRadius: 1,}}>
+    <Card sx={{ display: "flex", alignItems: "center", justifyContent: 'space-evenly', gap: 2, minHeight: 40, boxShadow: 2, borderRadius: 1,}}>
       {/* Team Name */}
       <Typography
         variant="h6"
@@ -25,40 +25,9 @@ const TeamCard = ({ teamData }) => {
 
       <Divider orientation="vertical" flexItem />
 
-      {/* Status Icons */}
-      {/* <Box sx={{ display: "flex", gap: 1, flexGrow: 1, justifyContent: "center", minWidth: 200 }}>
-        {statuses.map((status, index) => (
-          status ? (
-            <CheckCircleIcon key={index} sx={{ color: "green", fontSize: "1.8rem" }} />
-          ) : (
-            <CancelIcon key={index} sx={{ color: "red", fontSize: "1.8rem" }} />
-          )
-        ))}
-      </Box>
-
-      <Divider orientation="vertical" flexItem /> */}
-
-      {/* Wrong Answers Given */}
-      {/* <Box sx={{ display: "flex", flexShrink: 0, minWidth: 50, gap: 1, justifyContent: "center", }}>
-        <Typography variant="h6" sx={{ fontWeight: 'normal', fontSize: "1rem", whiteSpace: "nowrap", textAlign: "left"}}>
-          {wrong_answers}
-        </Typography>
-      </Box>
-
-      <Divider orientation="vertical" flexItem /> */}
-
-      {/* Hints Given */}
-      {/* <Box sx={{ display: "flex", flexShrink: 0, minWidth: 50, gap: 1, justifyContent: "center", }}>
-        <Typography variant="h6" sx={{ fontWeight: 'normal', fontSize: "1rem", whiteSpace: "nowrap", textAlign: "left"}}>
-          {hints_given}
-        </Typography>
-      </Box> */}
-
-      {/* <Divider orientation="vertical" flexItem /> */}
-
       {/* Score */}
-      <Box sx={{ display: "flex", width: 100, gap: 1, justifyContent: "center", }}>
-        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "1rem", whiteSpace: "nowrap", textAlign: "left"}}>
+      <Box sx={{ display: "flex", width: 100, gap: 1, justifyContent: "center", minWidth: 120,}}>
+        <Typography variant="h6" fontWeight="bold" sx={{ fontSize: "1rem", whiteSpace: "nowrap", textAlign: "center"}}>
           {score} ⭐
         </Typography>
       </Box>
