@@ -1,16 +1,12 @@
 import { Box, TextField, Button } from "@mui/material";
 import "./InputTeam.css";
+import { User } from "@supabase/supabase-js";
 import { ChangeEvent, useState } from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import updateTeamName from "./utils/updateTeamName";
 
-interface User {
-  id: string;
-  email: string;
-}
-
 interface Session {
-  expires_at: number;
+  expires_at?: number;
   provider_token?: string | null;
   provider_refresh_token?: string | null;
   access_token: string;
@@ -21,7 +17,7 @@ interface Session {
 }
 
 interface Props {
-  session: Session;
+  session: Session | null;
 }
 
 const InputTeam: React.FC<Props> = ({ session }) => {
@@ -38,9 +34,11 @@ const InputTeam: React.FC<Props> = ({ session }) => {
       return;
     }
 
-    const teamNameId = session.user.email;
+    const teamNameId = session?.user.email;
 
-    updateTeamName(teamNameId, inputTeamName).then(() => {});
+    updateTeamName(teamNameId, inputTeamName).then((response) => {
+      console.log(response);
+    });
   };
 
   return (

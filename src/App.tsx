@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { createClient, User } from "@supabase/supabase-js";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
 import QuestionCheck from "./pages/QuestionCheck/QuestionCheck";
 import InputTeam from "./pages/InputTeam/InputTeam";
 import useFetchQuestions from "./pages/QuestionCheck/hooks/useFetchQuestions";
-import useFetchTeamSolves from "./pages/QuestionCheck/hooks/useFetchTeamSolves";
 import useTeamRankings from "./pages/QuestionCheck/hooks/useTeamRankings";
 import { CircularProgress, Box } from "@mui/material";
+import SignIn from "./pages/SignIn/SignIn";
+import useFetchTeamName from "./hooks/useFetchTeamName";
+import useFetchTeamSolves from "./hooks/useFetchTeamSolves";
+import fetchTeamName from "./utils/fetchTeamName";
 
 interface Session {
-  expires_at: number;
+  expires_at?: number;
   provider_token?: string | null;
   provider_refresh_token?: string | null;
   access_token: string;
@@ -25,85 +26,87 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
-const fetchTeamName = async (session: Session) => {
-  const response = await fetch(
-    "https://isph-mini-cs50x-api.vercel.app/get-team-name",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: session.access_token,
-      },
-      body: JSON.stringify({ email: session.user.email }),
-      redirect: "follow",
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-
-  return response.json();
-};
-
 const App = () => {
-  const [session, setSession] = useState(null);
-  const [teamNameId, setTeamNameId] = useState<string>("");
-  const [teamName, setTeamName] = useState<string>("");
+  const [session, setSession] = useState<Session | null>(null);
+  const [authState, setAuthState] = useState<{
+    email: string;
+    accessToken: string;
+    teamName: string;
+    teamNameId: string;
+  }>({
+    email: "",
+    accessToken: "",
+    teamName: "",
+    teamNameId: "",
+  });
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      // @ts-ignore
-      setSession(session);
-      // @ts-ignore
-
-      if (session !== null) {
-        const safeSession = { ...session, expires_at: session.expires_at ?? 0 };
-        fetchTeamName(safeSession).then((data) => {
-          console.log(data);
-          setTeamNameId(data.team_name_id);
-          setTeamName(data.team_name);
-        });
-      }
-    });
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      // @ts-ignore
       setSession(session);
-      // @ts-ignore
+
+      if (session) {
+        fetchTeamName(session.user.email, session.access_token).then((data) => {
+          setAuthState({
+            email: session.user.email,
+            accessToken: session.access_token,
+            teamName: data.team_name,
+            teamNameId: data.team_name_id,
+          });
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const { data: questionList, isLoading: isQuestionLoading } =
-    useFetchQuestions();
+  const { email, accessToken, teamName, teamNameId } = authState;
 
-  const { data: teamSolves, isLoading: isTeamSolvesLoading } =
-    useFetchTeamSolves(teamNameId);
-
+  // Ensure the API calls only trigger when data is available
   const { data: teamRankings, isLoading: isTeamRankingsLoading } =
     useTeamRankings();
 
+  const { data: teamNameInfo, isLoading: isTeamNameLoading } = useFetchTeamName(
+    email ? email : null,
+    accessToken ? accessToken : null
+  );
+
+  const {
+    data: teamSolves,
+    isLoading: isTeamSolvesLoading,
+    refetch,
+  } = useFetchTeamSolves(teamNameId);
+
+  // Trigger a refetch as soon as `teamNameId` is available
+  useEffect(() => {
+    if (teamNameId) {
+      refetch(); // Ensures fetch happens in the same render cycle
+    }
+  }, [teamNameId, refetch]);
+
+  const { data: questionList, isLoading: isQuestionLoading } =
+    useFetchQuestions();
+
   if (!session) {
-    return (
-      <Auth
-        supabaseClient={supabase}
-        appearance={{ theme: ThemeSupa }}
-        providers={[]}
-        showLinks={false}
-      />
-    );
+    return <SignIn supabase={supabase} />;
   } else if (
-    isQuestionLoading ||
+    isTeamNameLoading ||
     isTeamSolvesLoading ||
+    isQuestionLoading ||
     isTeamRankingsLoading
   ) {
     return (
-      <Box sx={{ display: "flex", width: "100vw", height: "100vh", justifyContent: "center", alignItems: "center" }}>
-        <CircularProgress sx={{ color: "#A51C30"}} />;
+      <Box
+        sx={{
+          display: "flex",
+          width: "100vw",
+          height: "100vh",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress sx={{ color: "#A51C30" }} />;
       </Box>
     );
   } else if (teamName == null) {
@@ -111,6 +114,7 @@ const App = () => {
   } else {
     return (
       <QuestionCheck
+        teamName={teamName}
         teamNameId={teamNameId}
         questionList={questionList}
         teamSolves={teamSolves}

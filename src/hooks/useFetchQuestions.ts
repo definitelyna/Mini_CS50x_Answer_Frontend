@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
-const fetchTeamSolves = async (teamNameId : string) => {
+const fetchQuestions = async () => {
   const response = await fetch(
-    `https://isph-mini-cs50x-api.vercel.app/team/${encodeURI(teamNameId)}/questions`,
+    "https://isph-mini-cs50x-api.vercel.app/questions",
     {
       headers: {
         Accept: "application/json",
@@ -17,11 +17,11 @@ const fetchTeamSolves = async (teamNameId : string) => {
   return response.json();
 };
 
-const useFetchTeamSolves = (teamNameId : string) => {
+const useFetchQuestions = () => {
   return useQuery({
-    queryKey: ["teamSolves"],
-    queryFn: () => fetchTeamSolves(teamNameId),
+    queryKey: ["questions"],
+    queryFn: fetchQuestions,
   });
 };
 
-export default useFetchTeamSolves;
+export default useFetchQuestions;

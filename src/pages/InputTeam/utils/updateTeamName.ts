@@ -1,6 +1,7 @@
-const updateTeamName = async (teamNameId: string, inputTeamName: string) => {
-  console.log(teamNameId, inputTeamName)
-
+const updateTeamName = async (
+  teamNameId: string | undefined,
+  inputTeamName: string
+) => {
   const response = await fetch(
     "https://isph-mini-cs50x-api.vercel.app/update-team-name",
     {
@@ -8,7 +9,10 @@ const updateTeamName = async (teamNameId: string, inputTeamName: string) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ team_name_id: teamNameId, team_name: inputTeamName }),
+      body: JSON.stringify({
+        team_name_id: teamNameId,
+        team_name: inputTeamName,
+      }),
       redirect: "follow",
     }
   );

@@ -2,11 +2,11 @@ import {Box} from "@mui/material";
 import React from "react";
 
 interface Props {
-  teamNameId: string;
+  teamName: string;
   guessAttemps: number;
 }
 
-const TeamInfo : React.FC<Props> = ({ teamNameId, guessAttemps }) => {
+const TeamInfo : React.FC<Props> = ({ teamName, guessAttemps }) => {
   return (
     <Box
       sx={{
@@ -26,7 +26,7 @@ const TeamInfo : React.FC<Props> = ({ teamNameId, guessAttemps }) => {
         }}>
           <h2>Team name: </h2>
           &nbsp;
-          <h2 style={{ fontWeight: "normal" }}>{teamNameId}</h2>
+          <h2 style={{ fontWeight: "normal" }}>{teamName}</h2>
         </Box>
         <Box
           sx={{

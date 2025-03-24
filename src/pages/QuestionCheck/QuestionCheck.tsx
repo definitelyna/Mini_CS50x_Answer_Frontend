@@ -9,6 +9,7 @@ import AnswerQuestions from "./components/AnswerQuestions/AnswerQuestions.tsx";
 
 interface Props {
   teamNameId: string;
+  teamName: string;
   questionList: Array<Question>;
   teamSolves: { solves: Array<boolean> };
   teamRankings: Array<TeamData>;
@@ -23,14 +24,14 @@ const cleanQuestionData = (
   questionList: Array<Question>,
   questionAnswered: Array<boolean>
 ) => {
-  const cleanedQuestions: Array<CleanedQuestions> = [];
 
+  const cleanedQuestions: Array<CleanedQuestions> = [];
   for (let i = 0; i < questionList.length; i++) {
     cleanedQuestions.push({
       id: questionList[i].id,
       question: questionList[i].question,
       star_rating: questionList[i].star_rating,
-      answered: questionAnswered[i],
+      answered: questionAnswered ? questionAnswered[i] : false,
     });
   }
 
@@ -39,6 +40,7 @@ const cleanQuestionData = (
 
 const QuestionCheck: React.FC<Props> = ({
   teamNameId,
+  teamName,
   questionList,
   teamSolves,
   teamRankings,
@@ -103,6 +105,7 @@ const QuestionCheck: React.FC<Props> = ({
           <AnswerQuestions
             questions={questions}
             teamNameId={teamNameId}
+            teamName={teamName}
             guessAttemps={teamData.wrong_answers}
           />
           <Box
@@ -111,7 +114,7 @@ const QuestionCheck: React.FC<Props> = ({
               flexDirection: "column",
               alignItems: "center",
               width: isLargeScreen ? "50%" : "100%",
-              mt: 7
+              mt: 7,
             }}
           >
             <Leaderboard />

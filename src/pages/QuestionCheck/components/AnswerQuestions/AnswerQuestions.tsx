@@ -6,12 +6,14 @@ import { Question } from "../../../../type/QuestionCheckTypes.ts";
 
 interface Props {
   teamNameId: string;
+  teamName: string;
   questions: Array<Question>;
   guessAttemps: number;
 }
 
 const AnswerQuestions: React.FC<Props> = ({
   teamNameId,
+  teamName,
   guessAttemps,
   questions,
 }) => {
@@ -25,7 +27,7 @@ const AnswerQuestions: React.FC<Props> = ({
         mt: 7,
       }}
     >
-      <TeamInfo teamNameId={teamNameId} guessAttemps={guessAttemps} />
+      <TeamInfo teamName={teamName} guessAttemps={guessAttemps} />
       {questions.map((question) => {
         const questionWithAnswered = {
           ...question,
