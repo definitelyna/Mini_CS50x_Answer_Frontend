@@ -30,12 +30,12 @@ const App = () => {
   const [authState, setAuthState] = useState<{
     email: string | undefined;
     accessToken: string;
-    teamName: string;
+    teamName: string | null;
     teamNameId: string;
   }>({
     email: "",
     accessToken: "",
-    teamName: "",
+    teamName: null,
     teamNameId: "",
   });
 
@@ -54,7 +54,7 @@ const App = () => {
             teamNameId: data.team_name_id,
           });
         });
-      }
+      } 
     });
 
     return () => subscription.unsubscribe();
@@ -99,11 +99,11 @@ const App = () => {
           alignItems: "center",
         }}
       >
-        <CircularProgress sx={{ color: "#A51C30" }} />;
+        <CircularProgress sx={{ color: "#A51C30" }} />
       </Box>
     );
   } else if (teamName == null) {
-    return <InputTeam session={session} />;
+    return <InputTeam setAuthState={setAuthState} teamNameId={teamNameId} />;
   } else {
     return (
       <QuestionCheck
