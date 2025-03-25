@@ -6,7 +6,6 @@ import useFetchQuestions from "./pages/QuestionCheck/hooks/useFetchQuestions";
 import useTeamRankings from "./pages/QuestionCheck/hooks/useTeamRankings";
 import { CircularProgress, Box } from "@mui/material";
 import SignIn from "./pages/SignIn/SignIn";
-import useFetchTeamName from "./hooks/useFetchTeamName";
 import useFetchTeamSolves from "./hooks/useFetchTeamSolves";
 import fetchTeamName from "./utils/fetchTeamName";
 
@@ -29,7 +28,7 @@ const supabase = createClient(
 const App = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [authState, setAuthState] = useState<{
-    email: string;
+    email: string | undefined;
     accessToken: string;
     teamName: string;
     teamNameId: string;
@@ -61,16 +60,11 @@ const App = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const { email, accessToken, teamName, teamNameId } = authState;
+  const { teamName, teamNameId } = authState;
 
   // Ensure the API calls only trigger when data is available
   const { data: teamRankings, isLoading: isTeamRankingsLoading } =
     useTeamRankings();
-
-  const { data: teamNameInfo, isLoading: isTeamNameLoading } = useFetchTeamName(
-    email ? email : null,
-    accessToken ? accessToken : null
-  );
 
   const {
     data: teamSolves,
@@ -91,7 +85,6 @@ const App = () => {
   if (!session) {
     return <SignIn supabase={supabase} />;
   } else if (
-    isTeamNameLoading ||
     isTeamSolvesLoading ||
     isQuestionLoading ||
     isTeamRankingsLoading

@@ -1,4 +1,4 @@
-const fetchTeamName = async (email: string, accessToken: string) => {
+const fetchTeamName = async (email: string | undefined, accessToken: string) => {
   const response = await fetch(
     "https://isph-mini-cs50x-api.vercel.app/get-team-name",
     {
