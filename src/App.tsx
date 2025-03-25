@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
-import { createClient, User } from "@supabase/supabase-js";
-import QuestionCheck from "./pages/QuestionCheck/QuestionCheck";
-import InputTeam from "./pages/InputTeam/InputTeam";
-import useFetchQuestions from "./pages/QuestionCheck/hooks/useFetchQuestions";
-import useTeamRankings from "./pages/QuestionCheck/hooks/useTeamRankings";
-import { CircularProgress, Box } from "@mui/material";
-import SignIn from "./pages/SignIn/SignIn";
-import useFetchTeamSolves from "./hooks/useFetchTeamSolves";
-import fetchTeamName from "./utils/fetchTeamName";
+import { useState, useEffect } from 'react';
+import { User } from '@supabase/supabase-js';
+import supabase from './utils/supabaseClient';
+import QuestionCheck from './pages/QuestionCheck/QuestionCheck';
+import InputTeam from './pages/InputTeam/InputTeam';
+import useFetchQuestions from './pages/QuestionCheck/hooks/useFetchQuestions';
+import useTeamRankings from './pages/QuestionCheck/hooks/useTeamRankings';
+import { CircularProgress, Box } from '@mui/material';
+import SignIn from './pages/SignIn/SignIn';
+import useFetchTeamSolves from './hooks/useFetchTeamSolves';
+import fetchTeamName from './utils/fetchTeamName';
 
 interface Session {
   expires_at?: number;
@@ -20,11 +21,6 @@ interface Session {
   user: User;
 }
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
-
 const App = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [authState, setAuthState] = useState<{
@@ -33,10 +29,10 @@ const App = () => {
     teamName: string | null;
     teamNameId: string;
   }>({
-    email: "",
-    accessToken: "",
+    email: '',
+    accessToken: '',
     teamName: null,
-    teamNameId: "",
+    teamNameId: '',
   });
 
   useEffect(() => {
@@ -54,7 +50,7 @@ const App = () => {
             teamNameId: data.team_name_id,
           });
         });
-      } 
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -92,14 +88,14 @@ const App = () => {
     return (
       <Box
         sx={{
-          display: "flex",
-          width: "100vw",
-          height: "100vh",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          width: '100vw',
+          height: '100vh',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <CircularProgress sx={{ color: "#A51C30" }} />
+        <CircularProgress sx={{ color: '#A51C30' }} />
       </Box>
     );
   } else if (teamName == null) {
