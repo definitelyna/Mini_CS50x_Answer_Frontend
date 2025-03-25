@@ -33,7 +33,12 @@ const cleanQuestionData = (
       star_rating: questionList[i].star_rating,
       answered: questionAnswered ? questionAnswered[i] : false,
     });
+
   }
+  
+  cleanedQuestions.pop()
+
+  console.log(cleanedQuestions)
 
   return cleanedQuestions;
 };
